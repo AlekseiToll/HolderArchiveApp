@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Архив</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Styles/kendo/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Styles/kendo/kendo.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/angular-toastr.min.css" rel="stylesheet"/>
+
+    <script src="~/Scripts/Lib/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/Lib/angular.min.js"></script>
+    <script src="~/Scripts/Kendo/KendoUI/20151408/js/kendo.all.min.js"></script>
+    <script src="~/Scripts/Kendo/KendoUI/20151408/js/cultures/kendo.culture.ru-RU.js"></script>
+    <script src="~/Scripts/Kendo/KendoUI/20151408/js/messages/kendo.messages.ru-RU.js"></script>
+    <script src="~/Scripts/Lib/angular-toastr.min.js"></script>
+    <script src="~/Scripts/Lib/angular-toastr.tpls.min.js"></script>
+    <script src="~/Scripts/Local/AppModule.js"></script>
+    <script src="~/Scripts/Local/ArchiveController.js"></script>
+</head>
+<body>
+<h2>Архив</h2><br/>
+
+<div ng-app="HolderArchiveApp" ng-controller="ArchiveController as hvm" ng-init="load()">
+    <input type="text" class="k-textbox" ng-model="vm.barCode" ng-keyup="($event.keyCode == 13) ? vm.onchangeBarcode(vm.barCode) : ''"><br/>
+    <div ng-hide="currentMode.lightStand">
+        <table>
+            <tbody>
+            <tr class="outerRow" ng-repeat="holderTypeRow in HolderTypesRows">
+                <td ng-repeat="holderType in holderTypeRow">
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="holdertype">{{holderType.Name}}</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div ng-style="{'background-color':'{{holderType.Color}}', 'width':'120px', 'height':'40px'}">&nbsp;</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table class="topaligned" id="tableHolderId">
+                                    <tr>
+                                        <td width="0">
+                                            <div class="holderid">{{holderType.HolderId}}</div>
+                                        </td>
+                                        <td width="0">
+                                            <div class="holderinfo">{{holderType.Info}}</div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-show="currentMode.lightStand">
+        <table id="headerTable">
+            <tr>
+                <td>
+                    <div id="holderName">Штатив {{hvm.holderId}}.&nbsp;&nbsp;&nbsp;&nbsp;Тип штатива '{{hvm.holderTypeName}}'&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                </td>
+                <td>
+                    <div ng-style="{'background-color': hvm.holderTypeColor, 'width':'80px', 'height':'30px'}">&nbsp;</div>
+                </td>
+            </tr>
+        </table>
+        <br/><br/>
+
+        @*<input type="text" class="k-textbox" ng-model="barCode" ng-keyup="($event.keyCode == 13) ? vm.onchangeBarcode(barCode) : ''"><br/><br/>*@
+        <input type="button" class="k-button" value="Закончить архивацию" ng-click="hvm.finishArchiving()"><br/>
+
+        <table id="lightStand">
+            <tr>
+                <td></td>
+                <td ng-repeat="column in hvm.columns">
+                    <div align="center">{{column}}</div>
+                </td>
+            </tr>
+            <tr ng-repeat="(rowIndex, row) in hvm.rows">
+                <td>{{row}}</td>
+                <td class="tablecell" ng-repeat="(colIndex, column) in hvm.columns" style="border: 2px solid black">
+                    <div style="height: 100%; display: flex; justify-content: center; align-items: center;"
+                         ng-style="hvm.getStyle(hvm.lightStandModel[rowIndex][colIndex].state)">
+                        {{hvm.lightStandModel[rowIndex][colIndex].name}}
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div kendo-window="hvm.confirmFinishWindow" k-title="'Подтверждение'" k-visible="false" k-on-close="win1visible = false">
+        <div class="kendo-popup-modal-body">
+            <p>Завершить архивацию?</p>
+        </div>
+        <div class="kendo-popup-modal-footer">
+            <button type="button" id="okButton" class="k-button my-focused-button" ng-click="hvm.confirmFinishApply()">OK</button>
+            <button type="button" class="k-button" ng-click="hvm.confirmFinishCancel()">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .holderid {
+        font-size: 30px;
+        font-weight: bold;
+    }
+    .holderinfo {
+        font-size: 15px;
+        font-weight: 400;
+        /*background-color: grey;*/
+    }
+    .holdertype {
+        font-size: 15px;
+        font-weight: 600;
+    }
+    table {
+        /*width: 100%;  Ширина таблицы */
+        border-spacing: 1px; /* Расстояние между ячейками */
+        text-align: center;
+        padding: 1px;
+        /*border: 1px solid #000;*/
+        vertical-align: top;
+    }
+    td, th {
+        padding: 2px; /* Поля вокруг текста */
+        text-align: center;
+        /*border: 1px solid #000;*/
+        vertical-align: top;
+    }
+    .topaligned {
+        margin-top: 0;
+        margin-bottom: auto;
+        vertical-align: top;
+        margin: 0 auto;
+    }
+    .outerRow {
+        height: 170px;
+    }
+    #lightStand {
+    border-spacing: 1px;
+    padding: 1px;
+    border: 1px solid #000;
+    display: inline-block;
+    overflow: auto;
+    max-width: 100%;
+    max-height: 500px;
+    font-size: 20px;
+}
+td, th {
+    padding: 1px;
+    text-align: center;
+    vertical-align: top;
+}
+.tablecell {
+    width: 30px;
+}
+html {
+    /*overflow: scroll;*/
+}
+#holderName {
+    font-size: 22px;
+    font-weight: bold;
+}
+#headerTable {
+    /*border: 1px solid #000;*/
+}
+
+#okButton {
+   background: #428cca;
+   color: white;
+}
+</style>
+
+</body>
+</html>

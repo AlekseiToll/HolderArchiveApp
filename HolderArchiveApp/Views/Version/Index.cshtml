@@ -1,0 +1,14 @@
+﻿@model Version
+@{
+    ViewBag.Title = "Версия сайта";
+    Layout = null;
+}
+
+<style>
+    body {
+        font-family: monospace;
+        font-size: large;
+    }
+</style>
+
+<p>Версия сайта: <b>@Model.ToString()</b></p>

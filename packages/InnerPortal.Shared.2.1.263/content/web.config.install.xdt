@@ -1,0 +1,50 @@
+﻿<?xml version="1.0"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  
+  <appSettings xdt:Transform="InsertIfMissing">
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="UserMessageUrl" value="admin/UserMessage/Index" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="ChangeMenuStateUrl" value="Menu/ChangeMenuState" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="UserMessageCountUrl" value="admin/UserMessage/GetUnreadMessagesCount" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="LoginUrl" value="AccountUser/UnAuthorized" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="UserSettingsUrl" value="Admin/UserSettings" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="ChangePasswordUrl" value="AccountUser/ChangePassword" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="LogOffUrl" value="AccountUser/LogOff" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="ImageBaseUrl" value="Content/Images" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="StyleBaseUrl" value="Content/Styles" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="ScriptBaseUrl" value="Content/Scripts" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="UseHttps" value="true" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="UseHttpsForCdn" value="true" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="CdnUrl" value="local.cdn-365.dev.helix.ru" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="MainDomainUrl" value="local.365.dev.helix.ru" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="DownloadTeamViewerUrl" value="AccountUser/TeamViewerDownload" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="DownloadHelixOfflineUrl" value="AccountUser/HelixOfflineDownload" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="DownloadHelpPdfUrl" value="Admin/DownloadHelpPdf/GetUserManual" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="CookieDomain" value=".dev.helix.ru" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" key="owin:appStartup" value="InnerPortal.Shared.BaseStartup, InnerPortal.Shared" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Condition(contains(@key, 'DatabaseInitializerForType') and contains(@key, 'Helix.DAL.InnerPortal.InnerPortalContext'))" key="DatabaseInitializerForType Helix.DAL.InnerPortal.InnerPortalContext, Helix.DAL.InnerPortal" value="Disabled" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Condition(contains(@key, 'DatabaseInitializerForType') and contains(@key, 'Helix.Identity.ApplicationDbContext'))" key="DatabaseInitializerForType Helix.Identity.ApplicationDbContext, Helix.Identity" value="Disabled" />
+  </appSettings>
+
+  <connectionStrings xdt:Transform="InsertIfMissing">
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)" name="innerPortalDB" providerName="System.Data.SqlClient" connectionString="Data Source=dev-sql;Initial Catalog=InnerPortalDbDeploy;Persist Security Info=True;User ID=dev;Password=sql" />
+    <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)" name="IdentityServices" providerName="System.Data.SqlClient" connectionString="Data Source=dev-sql;Initial Catalog=HelixIdentity;Persist Security Info=True;User ID=dev;Password=sql" />
+  </connectionStrings>
+
+  <system.web xdt:Transform="InsertIfMissing">
+    <machineKey xdt:Transform="InsertIfMissing"/>
+    <machineKey xdt:Transform="Replace" decryption="AES" decryptionKey="158AFE6B11AABF1D50354518DA23FFAE0695A35687B7A192" validationKey="69225F44C0A3C5299908D30C4D4312EA4B233D071A2E476F63CA2B479AD8EC72E7851A2D486BA1DE97062EFC52D0E74CF04994CB7006FB806A82BEC6A7B553ED" />
+
+    <sessionState xdt:Transform="InsertIfMissing" />
+    <sessionState xdt:Transform="Replace" mode="SQLServer" timeout="20" allowCustomSqlDatabase="true" sqlConnectionString="Data Source=DEV-SQL;database=ASPState;user id=dev;password=sql" cookieless="false" />
+  </system.web>
+
+  <system.webServer  xdt:Transform="InsertIfMissing">
+    <httpProtocol xdt:Transform="InsertIfMissing">
+      <customHeaders xdt:Transform="InsertIfMissing">
+        <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)" name="Access-Control-Allow-Origin" value="*" />
+        <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)" name="Access-Control-Allow-Headers" value="Content-Type" />
+        <add xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)" name="Access-Control-Allow-Methods" value="GET,HEAD,DEBUG,PATCH,OPTIONS" />
+      </customHeaders>
+    </httpProtocol>
+  </system.webServer>
+</configuration>

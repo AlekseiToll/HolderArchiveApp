@@ -1,0 +1,100 @@
+﻿@using InnerPortal.Shared.Helpers
+<div></div>
+
+<script>
+
+    var urlNavigate = "@SubDomainsUrlsHelper.GetUserMessageUrl()";
+    var urlUnreadMessagesCount = "@SubDomainsUrlsHelper.GetUserMessageCountUrl()";
+
+    function Layout_MessagesNotify() {
+        this.chat;
+
+        this.create = function() {
+            var ref = this;
+
+            if (navigator.appVersion.indexOf("MSIE 10") !== -1) {
+                $("#gl_btnMsgOpen").on("mousedown", function(e) {
+                    window.location = urlNavigate;
+                });
+            } else {
+                $("#gl_btnMsgOpen").on("click", function(e) {
+                    window.location = urlNavigate;
+                });
+            }
+            if ($.connection) {
+                var chat = $.connection.messageHub;
+                chat.client.addNewMessageToPage = function(name, message) {
+                    ref.onUnreadMessages();
+                }
+            };
+        }
+        this.onUnreadMessages = function(unreadCount) {
+            if (unreadCount > 0) {
+                $("#gl_aroundMsgSignal").css("display", "inline");
+                var txt = "+   " + unreadCount + " ";
+                $("#gl_msgCount").text(txt);
+            } else {
+                $("#gl_aroundMsgSignal").css("display", "none");
+                $("#gl_msgCount").text("");
+            }
+        }
+
+        this.getUnreadMessagesCount = function() {
+            var ref = this;
+
+            $.ajax({
+                    type: "POST",
+                    url: urlUnreadMessagesCount,
+                })
+                .success(function(result) {
+
+                    if (result == undefined || result == null) {
+                        result = new Object();
+                        result.Success = false;
+                        result.Error = "Ошибка. Не было объекта ответа.";
+                    }
+                    if (result.Success == undefined || result.Success == null) {
+                        result.Success = false;
+                        result.Error = "Ошибка. Не было поля Success.";
+                    }
+                    if (result.Data == undefined || result.Data == null) {
+                        result.Data = "";
+                        result.Error = "Ошибка. Не было поля Data.";
+                    }
+                    if (result.Error == undefined || result.Error == null) {
+                        result.Error = "";
+                    }
+
+                    ref.unreadMessagesCount_Result(result);
+                })
+                .fail(function(xhr, textStatus, errorThrown) {
+                    var er = "DoSend. failed. status:" + xhr.status + ", status text: " + xhr.statusText;;
+                });
+
+        }
+
+        this.unreadMessagesCount_Result = function(result) {
+            try {
+                if (result.Success != true) {
+                    return;
+                }
+                var countWrap = JSON.parse(result.Data);
+                var count = 0;
+                if (!isNaN(countWrap.unreadCount)) {
+                    count = countWrap.unreadCount;
+                }
+                this.onUnreadMessages(count);
+            } catch (e) {
+                var a = 0;
+            }
+        }
+    }
+
+    var layout_msgNotify = new Layout_MessagesNotify();
+
+    $(document).ready(function() {
+
+        layout_msgNotify.create();
+        layout_msgNotify.getUnreadMessagesCount();
+    })
+</script>

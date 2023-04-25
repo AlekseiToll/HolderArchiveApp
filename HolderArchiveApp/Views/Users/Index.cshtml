@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Пользователи</title>
+    <link href="~/Styles/kendo/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Styles/kendo/kendo.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/angular-toastr.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/Lib/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/Lib/angular.min.js"></script>
+    <script src="~/Scripts/Kendo/KendoUI/20151408/js/kendo.all.min.js"></script>
+    <script src="~/Scripts/Kendo/KendoUI/20151408/js/cultures/kendo.culture.ru-RU.js"></script>
+    <script src="~/Scripts/Kendo/KendoUI/20151408/js/messages/kendo.messages.ru-RU.js"></script>
+    <script src="~/Scripts/Lib/angular-toastr.min.js"></script>
+    <script src="~/Scripts/Lib/angular-toastr.tpls.min.js"></script>
+    <script src="~/Scripts/Local/AppModule.js"></script>
+    <script src="~/Scripts/Local/UsersController.js"></script>
+</head>
+
+<body>
+    <h2>Пользователи</h2>
+
+    <div id="example" ng-app="HolderArchiveApp">
+        <div ng-controller="UsersController as hvm">
+            @*<kendo-grid id="MainGrid" options="hvm.mainGridOptions"></kendo-grid>*@
+            <div kendo-grid id="MainGrid" k-options="hvm.mainGridOptions"></div>
+        </div>
+    </div>
+
+    <style>
+        .contact-info-form {
+            list-style-type: none;
+            margin: 30px 0;
+            padding: 0;
+        }
+
+        .contact-info-form li {
+            margin: 10px 0;
+        }
+
+        .contact-info-form label {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+            font-weight: bold;
+        }
+    </style>
+
+</body>
+</html>

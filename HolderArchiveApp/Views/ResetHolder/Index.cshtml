@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Сброс</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Styles/kendo/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Styles/kendo/kendo.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/angular-toastr.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/Lib/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/Lib/angular.min.js"></script>
+    <script src="~/Scripts/Kendo/KendoUI/20151408/js/kendo.all.min.js"></script>
+    <script src="~/Scripts/Kendo/KendoUI/20151408/js/cultures/kendo.culture.ru-RU.js"></script>
+    <script src="~/Scripts/Kendo/KendoUI/20151408/js/messages/kendo.messages.ru-RU.js"></script>
+    <script src="~/Scripts/Lib/angular-toastr.min.js"></script>
+    <script src="~/Scripts/Lib/angular-toastr.tpls.min.js"></script>
+    <script src="~/Scripts/Local/AppModule.js"></script>
+    <script src="~/Scripts/Local/ResetHolderController.js"></script>
+</head>
+
+<body>
+<h2>Сброс</h2>
+<p align="right">Текущая дата: <span id="curtime"></span></p>
+
+<div id="example" ng-app="HolderArchiveApp">
+    <div ng-controller="ResetHolderController as hvm">
+        <p><input type="button" class="k-button" value="Обновить" ng-click="hvm.updateData()">&nbsp;&nbsp; Данные на дату: {{vm.dateOfLastUpdate}}</p>
+        <p><input type="text" class="k-textbox" ng-model="vm.barCode" ng-keyup="($event.keyCode == 13) ? vm.onchangeBarcode(vm.barCode) : ''"><br /></p>
+
+        <h3>Готовы к сбросу</h3><br/>
+        @*<kendo-grid id="MainGrid" options="hvm.mainGridOptions"></kendo-grid>*@
+        <div kendo-grid id="MainGrid" k-options="hvm.mainGridOptions"></div>
+
+        <div kendo-window="vm.resetHolderWindow" k-title="'Сброс штатива'" k-visible="false" k-on-close="win1visible = false">
+            <div class="kendo-popup-modal-body">
+                <p align="center"><div ng-style="{'background-color':vm.colorOfHolderToReset, 'width':'120px', 'height':'40px'}">&nbsp;</div></p>
+                <p>Вы хотите сбросить штатив {{vm.idOfHolderToReset}}? Подтвердите действия</p>
+            </div>
+            <div class="kendo-popup-modal-footer" align="right">
+                <button type="button" id="okButton" class="k-button my-focused-button" ng-click="vm.holderResetApply()">Подтвердить сброс</button>
+                <button type="button" class="k-button" ng-click="vm.holderResetCancel()">Отменить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .contact-info-form {
+        list-style-type: none;
+        margin: 30px 0;
+        padding: 0;
+    }
+
+    .contact-info-form li {
+        margin: 10px 0;
+    }
+
+    .contact-info-form label {
+        display: inline-block;
+        width: 100px;
+        text-align: right;
+        font-weight: bold;
+    }
+
+    .resetedRow {
+			background: #ea1616;
+			color: #1065e4;
+	}
+
+    .resetedRow2 {
+			background: #f0f807;
+			color: #c718d7;
+	}
+    .resetedRow2 {
+			background: #f0f807;
+			color: #c718d7;
+	}
+
+    #okButton {
+        background: #428cca;
+        color: white;
+    }
+</style>
+
+<script>
+    //$("#MainGrid").kendoGrid({
+    //    rowTemplate: '<tr class="#:ReportClassDescription==\"Not Express\"? \"red\" : \"white\"#" data-uid="#= uid #"><td>#: name #</td><td>#:ReportClassDescription #</td></tr>'
+    //});
+    $("#MainGrid").kendoGrid({
+        //dataSource: ds,
+        rowTemplate: '<tr class="#:Id==20 ? \"red\" : \"white\"#" data-uid="#= uid #"><td>#: HolderTypeName #</td><td>#:Id #</td><td>#: ArchivedOn #</td><td>#: TimeLimit #</td></tr>'
+    });
+</script>
+
+</body>
+</html>

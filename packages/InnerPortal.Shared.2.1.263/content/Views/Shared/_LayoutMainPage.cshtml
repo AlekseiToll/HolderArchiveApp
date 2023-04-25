@@ -1,0 +1,298 @@
+﻿@using System.Web.Mvc.Html
+@using Helix.Identity
+@using InnerPortal.Shared.Helpers
+@using InnerPortal.Shared.Models
+@{
+    var menuManager = new MenuManagerFactory().CreateMenuManager(HttpContext.Current.User, HttpContext.Current.Request);
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="@string.Format("{0}/{1}", SubDomainsUrlsHelper.GetBaseStyleUrl(), "simple-sidebar.css")" rel="stylesheet" />
+    <link href="@string.Format("{0}/{1}", SubDomainsUrlsHelper.GetBaseStyleUrl(), "font-awesome.min.css")" rel="stylesheet" />
+    <link href="@string.Format("{0}/{1}", SubDomainsUrlsHelper.GetBaseStyleUrl(), "Bootstrap/3.3.6/css/bootstrap.min.css")" rel="stylesheet" />
+    <link href="@string.Format("{0}/{1}", SubDomainsUrlsHelper.GetBaseStyleUrl(), "site.css")" rel="stylesheet" />
+    <script src="@string.Format("{0}/{1}", SubDomainsUrlsHelper.GetBaseScriptUrl(), "Jquery/jquery-1.9.1.min.js")" type="text/javascript"></script>
+    <script defer src="@string.Format("{0}/{1}", SubDomainsUrlsHelper.GetBaseStyleUrl(), "Bootstrap/3.3.6/js/bootstrap.min.js")" type="text/javascript"></script>
+
+    @if (!User.GetIsHideOnlineConsultationFlag())
+    {
+        <script id="rhlpscrtg" type="text/javascript" charset="utf-8" async="async" src="https://web.redhelper.ru/service/main.js?c=spbhelix"></script>
+    }
+    @if (menuManager.EnvType.EnableWebTracking)
+    {
+        <!-- Start Open Web Analytics Tracker -->
+        <script type="text/javascript">
+            //<![CDATA[
+            var owa_baseUrl = 'https://owana.spb.helix.ru/';
+            var owa_cmds = owa_cmds || [];
+            owa_cmds.push(['setSiteId', '@menuManager.EnvType.WebTrackingSiteId']);
+            owa_cmds.push(['trackPageView']);
+            owa_cmds.push(['trackClicks']);
+            //owa_cmds.push(['trackDomStream']);
+
+            (function () {
+                var owa = document.createElement('script');
+                owa.type = 'text/javascript';
+                owa.async = true;
+                owa_baseUrl = ('https:' === document.location.protocol ? window.owa_baseSecUrl || owa_baseUrl.replace(/http:/, 'https:') : owa_baseUrl);
+                owa.src = owa_baseUrl + 'modules/base/js/owa.tracker-combined-min.js';
+                var owas = document.getElementsByTagName('script')[0];
+                owas.parentNode.insertBefore(owa, owas);
+            }());
+            //]]>
+        </script>
+        <!-- End Open Web Analytics Code -->
+    }
+
+    @RenderSection("ViewJsCssHead", false)
+</head>
+<body class="@(!menuManager.LeftMenuActive ? "hidden-left-menu" : "")">
+    @{
+        var alertMsg = TempData["alertMsg"] as string;
+        if (!string.IsNullOrEmpty(alertMsg))
+        {
+            <span id="alertMsg" class="hidden">@alertMsg</span>
+        }
+    }
+    <nav class="navbar navbar-default no-margin">
+
+        <div class="navbar-header fixed-brand">
+            <button id="mobile-menu-control-btn" type="button" class="navbar-toggle collapsed pull-left" data-toggle="collapse" data-target="" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="@SubDomainsUrlsHelper.MainUrl()" class="navbar-logo-link">
+                <div class="navbar-brand" style="width: 105px; margin-top: 10px; height: 51px; background-image: url(@(SubDomainsUrlsHelper.GetBaseImageUrl() + "/logo.jpg")); background-repeat: no-repeat;"></div>
+            </a>
+
+        </div>
+
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                @foreach (var parent in menuManager.Parents)
+                {
+                    var isParentActive = menuManager.IsParentActive(parent, HttpContext.Current.Request.Path);
+                    <li class="left-menu-item @(isParentActive ? "current" : string.Empty)"><a href="@(isParentActive ? "javascript:void(0)" : parent.FullUrl)">@parent.Name</a></li>
+                }
+
+                <li class="left-menu-item">
+                    <div class="dropdown padding-dropdownButton">
+                        <a class="dropdown-toggle" href="" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Помощь
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                            @if (Request.IsAuthenticated)
+                            {
+                                <li><a href="#" onclick="GetUserManualPdf()">Руководство пользователя</a></li>
+                            }
+                            <li><a href="@SubDomainsUrlsHelper.TeamViewerUrl()" target="_blank">Скачать TeamViewer</a></li>
+                            <li><a href="@SubDomainsUrlsHelper.HelixOfflineUrl()" target="_blank">Скачать HelixOffline</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="sidebar-right">
+                <div class="nav-message-area">
+                    <div id="gl_aroundMsgSignal" style="display: none">
+                        <span id="gl_msgCount"></span><button id="gl_btnMsgOpen" class="btn btn-default btnplus"><i class="glyphicon glyphicon-envelope"></i></button>
+                    </div>
+                </div>
+                <div class="nav navbar-nav navbar-right nav-hover-link">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <div class="btn-group">
+                            <a class="btn btn-lg dropdown-toggle" href="#">
+                                @(User.GetFullName())
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@SubDomainsUrlsHelper.GetLogOffUrl()">Выйти</a></li>
+                                <li><a href="@SubDomainsUrlsHelper.GetUserSettingsUrl()">Настройки пользователя</a></li>
+
+                                @if (!User.IsDomainUser())
+                                {
+                                    <li><a href="@SubDomainsUrlsHelper.GetChangePasswordUrl()">Сменить пароль</a></li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <a href="@SubDomainsUrlsHelper.GetLoginUrl()" class="btn">Войти</a>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+    <div id="wrapper" class="clear-fix @(menuManager.IsMenuOpen ? "" : "toggled-2")">
+        @if (menuManager.LeftMenuActive)
+        {
+            <div id="sidebar-wrapper">
+                <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+                    <li>
+                        <span class="header-left-menu" id="left-menu-toggle"><span class="fa fa-stack fa-lg pull-left"><i class="@(menuManager.IsMenuOpen ? "left-menu-arrow_open" : "left-menu-arrow_closed") pull-left"></i></span> </span>
+                    </li>
+                    @foreach (var container in menuManager.ActiveParent.Containers)
+                    {
+                        <li class="@(container.GetCssClassForActiveMenuItem())">
+                            <a href="@container.FullUrl" @container.GetHtmlAttributes()>
+                                <span class="fa fa-stack fa-lg sidebar-nav__left-icon">
+                                    @if (string.IsNullOrEmpty(container.Icon))
+                                    {
+                                        <i class="glyphicon glyphicon-align-left pull-left"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="@container.Icon pull-left"></i>
+                                    }
+                                </span>
+                                <p class="sidebar-nav__item-text">@container.Name</p>
+                                @if (container.Items.Count > 0)
+                                {
+                                    <span class="fa-stack fa-lg sidebar-nav__right-icon">
+                                        <i class="fa fa-angle-down pull-right"></i>
+                                    </span>
+                                }
+                            </a>
+                            <ul class="nav-pills nav-stacked" style="display:@(menuManager.IsSubMenuVisible(container) ? "block" : "none")">
+                                @foreach (var item in container.Items)
+                                {
+                                    <li class="@(item.IsItemActive ? "active" : string.Empty)">
+                                        <a class="subitem-padding " href="@item.FullUrl" @item.GetHtmlAttributes()>
+                                            <p>@item.Name</p>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+        <div id="page-content-wrapper">
+            <div id="page-content">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <noscript>
+        <div class="container">
+            <div class="panel panel-default no-js-message">
+                <div class="panel-body text-center">
+                    <span class="triangle-container"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                    <h2>Внимание!</h2>
+                    <p>
+                        В настройках вашего браузера отключена поддержка JavaScript.<br> Для корректной работы данного веб-сайта вам нужно включить поддержку JavaScript.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </noscript>
+
+    <!-- footer -->
+    <footer class="page-footer">
+        <div class="container">
+            <div class="clear-fix">
+                <div class="info-block">
+                    <p class="info-block__name">Служба Клиентской Поддержки Хеликс, <span class="info-block__worktime">круглосуточно, без выходных</span></p>
+                </div>
+                <div class="copyright">
+                    <span>&copy; Helix @DateTime.Now.Year</span>
+                </div>
+            </div>
+            <div class="clear-fix">
+                <section class="contacts">
+                    <span>Бесплатный звонок по России:</span>
+                    <span class="contacts__phone">8 800 700 03 01</span>
+                    <span class="contacts__email">E-mail: <a href="mailto:skp@spb.helix.ru">skp@spb.helix.ru</a></span>
+                </section>
+                <section class="cities">
+                    <table>
+                        <tr>
+                            <td class="cities__place">Санкт-Петербург</td>
+                            <td class="cities__phone">(812) 607 60 07</td>
+                            <td class="cities__place">Курск</td>
+                            <td class="cities__phone">(471) 277 04 15</td>
+                            <td class="cities__place">Тюмень</td>
+                            <td class="cities__phone">(3452) 39 30 00</td>
+                        </tr>
+                        <tr>
+                            <td class="cities__place">Москва</td>
+                            <td class="cities__phone">(495) 783 35 00</td>
+                            <td class="cities__place">Новосибирск</td>
+                            <td class="cities__phone">(383) 202 21 52</td>
+                            <td class="cities__place">Уфа</td>
+                            <td class="cities__phone">(347) 222 20 50</td>
+                        </tr>
+                        <tr>
+                            <td class="cities__place">Екатеринбург</td>
+                            <td class="cities__phone">(343) 344 02 17</td>
+                            <td class="cities__place">Саратов</td>
+                            <td class="cities__phone">(8452) 338 388</td>
+                            <td class="cities__place">Челябинск</td>
+                            <td class="cities__phone">(351) 734 98 76</td>
+                        </tr>
+                    </table>
+                </section>
+            </div>
+        </div>
+    </footer>
+    @if (Request.IsAuthenticated)
+    {
+        @Html.Partial("MessageView")
+
+        <script>
+            window.menuStorage = {
+                changeMenuStateUrl: '@SubDomainsUrlsHelper.GetChangeMenuStateUrl()',
+                userName: '@HttpContext.Current.User.Identity.Name'
+            }
+        </script>
+    }
+    <script>
+        function GetUserManualPdf() {
+            var url = "@SubDomainsUrlsHelper.HelpPdfUrl()";
+            $.fileDownload(url,
+            {
+                onSuccess: function () { },
+                successCallback: function () { },
+                failCallback: function (data) {
+                    if (!data) {
+                        data = "Невозможно скачать файл. Обратитесь в службу клиентской поддержки";
+                    }
+                    $.helixNotify(data, { type: 'error' });
+                    kendo.ui.progress($("#loadIndicator"), false);
+                }
+            });
+            return false;
+        }
+
+        $(function () {
+            var alertMsgCtrl = $("#alertMsg");
+            if (alertMsgCtrl.text()) {
+                alert(alertMsgCtrl.text());
+            }
+        });
+    </script>
+    <script src="@string.Format("{0}/{1}", SubDomainsUrlsHelper.GetBaseScriptUrl(), "sidebar_menu.js")" type="text/javascript"></script>
+</body>
+</html>
+
+
+
+
+
+

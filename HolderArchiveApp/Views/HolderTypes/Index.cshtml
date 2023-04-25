@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Список штативов</title>
+    <link href="~/Styles/kendo/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Styles/kendo/kendo.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/angular-toastr.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/Lib/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/Lib/angular.min.js"></script>
+    <script src="~/Scripts/Kendo/KendoUI/20151408/js/kendo.all.min.js"></script>
+    <script src="~/Scripts/Kendo/KendoUI/20151408/js/cultures/kendo.culture.ru-RU.js"></script>
+    <script src="~/Scripts/Kendo/KendoUI/20151408/js/messages/kendo.messages.ru-RU.js"></script>
+    <script src="~/Scripts/Kendo/KendoAspNetMvc/20151408/js/kendo.aspnetmvc.js"></script>
+    <script src="~/Scripts/Lib/bootstrap.min.js"></script>
+    <script src="~/Scripts/Lib/angular-toastr.min.js"></script>
+    <script src="~/Scripts/Lib/angular-toastr.tpls.min.js"></script>
+    <script src="~/Scripts/Lib/JsBarcode.all.min.js"></script>
+    <script src="~/Scripts/Local/AppModule.js"></script>
+    <script src="~/Scripts/Local/HolderTypesController.js"></script>
+</head>
+
+<body>
+    <h2>Список штативов</h2>
+
+    <div id="HoldersPage" ng-app="HolderArchiveApp">
+        <div ng-controller="HolderTypesController as hvm">
+            @*<kendo-grid id="MainGrid" options="hvm.mainGridOptions">*@
+            <div kendo-grid id="MainGrid" k-options="hvm.mainGridOptions">
+                <div k-detail-template>
+                    <kendo-tabstrip>
+                        <ul>
+                            <li class="k-state-active">Штативы</li>
+                        </ul>
+                        <div>
+                            <div kendo-grid k-options="hvm.detailGridOptions(dataItem)"></div>
+                        </div>
+                    </kendo-tabstrip>
+                </div>
+            @*</kendo-grid>*@
+            </div>
+
+            <div kendo-window="vm.confirmToWorkWindow" k-title="'Перевод штативов в статус Пустой'" k-visible="false" k-on-close="win1visible = false">
+                <div class="kendo-popup-modal-body">
+                    <p>{{vm.confirmToWorkText}}</p>
+                </div>
+                <div class="kendo-popup-modal-footer">
+                    <button type="button" id="okButton1" class="k-button my-focused-button" ng-click="vm.confirmToWorkApply()">Да</button>
+                    <button type="button" class="k-button" ng-click="vm.confirmToWorkCancel()">Нет</button>
+                </div>
+            </div>
+
+            <div kendo-window="vm.confirmDeleteWindow" k-title="'Подтверждение'" k-visible="false" k-on-close="win1visible = false">
+                <div class="kendo-popup-modal-body">
+                    <p>{{vm.confirmDeleteText}}</p>
+                </div>
+                <div class="kendo-popup-modal-footer">
+                    <button type="button" id="okButton2" class="k-button my-focused-button" ng-click="vm.confirmDeleteApply()">Удалить</button>
+                    <button type="button" class="k-button" ng-click="vm.confirmDeleteCancel()">Отменить</button>
+                </div>
+            </div>
+
+            <div kendo-window="vm.addNewHoldersWindow" k-title="'Увеличение количества штативов'" k-visible="false" k-on-close="win1visible = false">
+                <div class="kendo-popup-modal-body">
+                    <p>На сколько нужно увеличить количество штативов?</p>
+                    <p><input id="numericTextBox"/>
+                    </p>
+                </div>
+                <div class="kendo-popup-modal-footer">
+                    <button type="button" id="okButton3" class="k-button my-focused-button" ng-click="vm.addNewHoldersApply()">Увеличить</button>
+                    <button type="button" class="k-button" ng-click="vm.addNewHoldersCancel()">Отменить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<style>
+    .contact-info-form {
+        list-style-type: none;
+        margin: 30px 0;
+        padding: 0;
+    }
+
+    .contact-info-form li {
+        margin: 10px 0;
+    }
+
+    .contact-info-form label {
+        display: inline-block;
+        width: 100px;
+        text-align: right;
+        font-weight: bold;
+    }
+
+    .k-widget.k-tooltip {
+        background: white;
+        color: black;
+    }
+
+    #okButton1, #okButton2, #okButton3 {
+        background: #428cca;
+        color: white;
+    }
+</style>
+
+</body>
+</html>

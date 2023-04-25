@@ -1,0 +1,81 @@
+﻿using System;
+using NLog;
+
+namespace Helix.Logger
+{
+    public interface IHelixLogger
+    {
+        void Log(LogLevel logLevel, string message, string entityId = null, Guid? actionGuid = null, double? executeTime = null, string serializedData = "");
+        void Log(LogLevel logLevel, Exception exception, string entityId = null, Guid? actionGuid = null, double? executeTime = null);
+        void Trace(string message, double? executeTime = null);
+        void Trace(string message, Guid actionGuid, double? executeTime = null);
+        void Trace(string message, string entityId, double? executeTime = null);
+        void Trace(string message, string entityId, Guid actionGuid, double? executeTime = null);
+        void Trace(string message, string entityId, Guid actionGuid, string serializedData, double? executeTime = null);
+        void Trace(string message, string entityId, Guid actionGuid, object objectToSerialize, double? executeTime = null);
+        void Trace(Exception exception, double? executeTime = null);
+        void Trace(Exception exception, Guid actionGuid, double? executeTime = null);
+        void Trace(Exception exception, string entityId, double? executeTime = null);
+        void Trace(Exception exception, string entityId, Guid actionGuid, double? executeTime = null);
+        void Debug(string message, double? executeTime = null);
+        void Debug(string message, Guid actionGuid, double? executeTime = null);
+        void Debug(string message, string entityId, double? executeTime = null);
+        void Debug(string message, string entityId, Guid actionGuid, double? executeTime = null);
+        void Debug(string message, string entityId, Guid actionGuid, string serializedData, double? executeTime = null);
+        void Debug(string message, string entityId, Guid actionGuid, object objectToSerialize, double? executeTime = null);
+        void Debug(Exception exception, double? executeTime = null);
+        void Debug(Exception exception, Guid actionGuid, double? executeTime = null);
+        void Debug(Exception exception, string entityId, double? executeTime = null);
+        void Debug(Exception exception, string entityId, Guid actionGuid, double? executeTime = null);
+        void Info(string message, double? executeTime = null);
+        void Info(string message, Guid actionGuid, double? executeTime = null);
+        void Info(string message, string entityId, double? executeTime = null);
+        void Info(string message, string entityId, Guid actionGuid, double? executeTime = null);
+        void Info(string message, string entityId, Guid actionGuid, string serializedData, double? executeTime = null);
+        void Info(string message, string entityId, Guid actionGuid, object objectToSerialize, double? executeTime = null);
+        void Info(Exception exception, double? executeTime = null);
+        void Info(Exception exception, Guid actionGuid, double? executeTime = null);
+        void Info(Exception exception, string entityId, double? executeTime = null);
+        void Info(Exception exception, string entityId, Guid actionGuid, double? executeTime = null);
+        void Warn(string message, double? executeTime = null);
+        void Warn(string message, Guid actionGuid, double? executeTime = null);
+        void Warn(string message, string entityId, double? executeTime = null);
+        void Warn(string message, string entityId, Guid actionGuid, double? executeTime = null);
+        void Warn(string message, string entityId, Guid actionGuid, string serializedData, double? executeTime = null);
+        void Warn(string message, string entityId, Guid actionGuid, object objectToSerialize, double? executeTime = null);
+        void Warn(Exception exception, double? executeTime = null);
+        void Warn(Exception exception, Guid actionGuid, double? executeTime = null);
+        void Warn(Exception exception, string entityId, double? executeTime = null);
+        void Warn(Exception exception, string entityId, Guid actionGuid, double? executeTime = null);
+        void Error(string message, double? executeTime = null);
+        void Error(string message, Guid actionGuid, double? executeTime = null);
+        void Error(string message, string entityId, double? executeTime = null);
+        void Error(string message, string entityId, Guid actionGuid, double? executeTime = null);
+        void Error(string message, string entityId, Guid actionGuid, string serializedData, double? executeTime = null);
+        void Error(string message, string entityId, Guid actionGuid, object objectToSerialize, double? executeTime = null);
+        void Error(Exception exception, double? executeTime = null);
+        void Error(Exception exception, Guid actionGuid, double? executeTime = null);
+        void Error(Exception exception, string entityId, double? executeTime = null);
+        void Error(Exception exception, string entityId, Guid actionGuid, double? executeTime = null);
+        void Fatal(string message, double? executeTime = null);
+        void Fatal(string message, Guid actionGuid, double? executeTime = null);
+        void Fatal(string message, string entityId, double? executeTime = null);
+        void Fatal(string message, string entityId, Guid actionGuid, double? executeTime = null);
+        void Fatal(string message, string entityId, Guid actionGuid, string serializedData, double? executeTime = null);
+        void Fatal(string message, string entityId, Guid actionGuid, object objectToSerialize, double? executeTime = null);
+        void Fatal(Exception exception, double? executeTime = null);
+        void Fatal(Exception exception, Guid actionGuid, double? executeTime = null);
+        void Fatal(Exception exception, string entityId, double? executeTime = null);
+        void Fatal(Exception exception, string entityId, Guid actionGuid, double? executeTime = null);
+        void Off(string message, double? executeTime = null);
+        void Off(string message, Guid actionGuid, double? executeTime = null);
+        void Off(string message, string entityId, double? executeTime = null);
+        void Off(string message, string entityId, Guid actionGuid, double? executeTime = null);
+        void Off(string message, string entityId, Guid actionGuid, string serializedData, double? executeTime = null);
+        void Off(string message, string entityId, Guid actionGuid, object objectToSerialize, double? executeTime = null);
+        void Off(Exception exception, double? executeTime = null);
+        void Off(Exception exception, Guid actionGuid, double? executeTime = null);
+        void Off(Exception exception, string entityId, double? executeTime = null);
+        void Off(Exception exception, string entityId, Guid actionGuid, double? executeTime = null);
+    }
+}
